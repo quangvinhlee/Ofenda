@@ -157,3 +157,7 @@ def test_cache_hit_skips_network(ollama, tmp_path):
     again = CalaveraWriter(MODEL, host=srv.host, cache_path=cache).write(make_soul())
     assert again == ("a\nb\nc\nd", "model")
     assert len(srv.requests) == 1
+
+
+def test_prompt_says_named_people_are_alive():
+    assert "Everyone named in the facts is alive" in build_prompt(make_soul(), "en")

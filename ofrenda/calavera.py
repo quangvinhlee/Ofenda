@@ -15,6 +15,7 @@ verse that mourns something as if it had died. Write exactly 4 rhyming lines in
 {language}. Use ONLY these facts; do not invent numbers, people, or events.
 Never be cruel about people. No title, no explanation, just the 4 lines.
 Name it by its name and work in at least one of the facts.
+Everyone named in the facts is alive: only the file or commit died, never a person.
 If the kind is contributor, the person is alive and only went quiet: say so gently,
 and refer to them by name or as "they", never "he" or "she".
 

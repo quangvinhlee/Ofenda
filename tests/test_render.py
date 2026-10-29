@@ -111,3 +111,23 @@ def test_same_day_move_is_not_styled_as_ghost():
     later = Return(Commit("c" * 40, "Cy", "c@x", datetime(2022, 1, 1, tzinfo=UTC), "back"),
                    "old.py", exact=True)
     assert "card ghost" in render_html(make_altar(souls=[make_soul(returned=later)]))
+
+
+def test_terminal_has_halloween_banner_and_tombstones():
+    out = terminal_text(make_altar())
+    assert "🦇" in out and "🎃" in out
+    assert "█" in out  # the big block-letter OFRENDA banner
+    assert "R.I.P." in out
+
+
+def test_terminal_census_counts_every_soul():
+    altar = make_altar()
+    altar.census = {"deleted files": 568, "reverts": 18, "ghosts": 52}
+    out = terminal_text(altar)
+    assert "Graveyard census" in out
+    assert "568" in out and "18" in out and "52" in out
+
+
+def test_html_has_halloween_touches():
+    out = render_html(make_altar())
+    assert "🦇" in out and "🎃" in out and "R.I.P." in out

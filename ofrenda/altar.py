@@ -1,7 +1,7 @@
 """Everything a renderer needs, in one object."""
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from .souls import Soul
@@ -17,6 +17,7 @@ class Altar:
     ghosts: list[Soul]
     verses: dict[str, tuple[str, str]]  # soul id -> (verse, "model" | "template")
     model: str | None
+    census: dict[str, int] = field(default_factory=dict)  # every soul found, not just the shown ones
 
 
 _CONTROL = re.compile(r"[\x00-\x1f\x7f-\x9f]")

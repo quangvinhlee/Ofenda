@@ -68,3 +68,10 @@ def test_cli_never_writes_to_working_tree(repo, capsys):
     before = sorted(p.name for p in repo.path.iterdir())
     assert main([str(repo.path), "--host", "http://127.0.0.1:9"]) == 0
     assert sorted(p.name for p in repo.path.iterdir()) == before
+
+
+def test_cli_shows_census(repo, capsys):
+    bury_a_file(repo)
+    assert main([str(repo.path), "--no-ai"]) == 0
+    out = capsys.readouterr().out
+    assert "Graveyard census" in out and "deleted files" in out

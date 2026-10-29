@@ -9,7 +9,7 @@ memorial verse.
 
 ![The altar for expressjs/express](docs/altar-express.svg)
 
-Sample HTML output: [`docs/ofrenda-express.html`](docs/ofrenda-express.html) (open it in a browser).
+Sample HTML output (spooky edition: moon, bats, tombstones): [`docs/ofrenda-express.html`](docs/ofrenda-express.html) (open it in a browser).
 
 ## Install
 

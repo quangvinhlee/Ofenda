@@ -12,7 +12,7 @@ from .altar import Altar, clean_text
 from .calavera import CalaveraWriter, fallback_verse
 from .git import GitError, git_dir, is_shallow, run_git
 from .history import read_history
-from .rank import enrich_lines, ghosts, select
+from .rank import enrich_lines, ghosts, is_ghost, select
 from .render_html import render_html
 from .render_terminal import render_terminal
 from .souls import DEFAULT_IGNORES, find_file_souls, find_quiet_contributors, find_revert_souls
@@ -80,14 +80,16 @@ def main(argv: list[str] | None = None) -> int:
         writer = CalaveraWriter(args.model, host=args.host, lang=args.lang,
                                 cache_path=git_dir(repo) / "ofrenda" / "calaveras.json")
     warned = False
-    with console.status("lighting candles…") as status:
-        for soul in chosen + back:
+    with console.status("lighting candles…", spinner="moon") as status:
+        todo = list({s.id: s for s in chosen + back}.values())
+        for soul in todo:
             if soul.id in verses:
                 continue
             if writer is None:
                 verses[soul.id] = (fallback_verse(soul), "template")
                 continue
-            status.update(Text(f"lighting candles for {clean_text(soul.name, 60)}…"))
+            status.update(Text(f"🎃 lighting candles for {clean_text(soul.name, 60)}… "
+                               f"({len(verses) + 1}/{len(todo)})"))
             verses[soul.id] = writer.write(soul)
             if writer.offline_reason and not warned:
                 console.print(Text(f"model offline ({clean_text(writer.offline_reason)}); "
@@ -103,6 +105,7 @@ def main(argv: list[str] | None = None) -> int:
         ghosts=back,
         verses=verses,
         model=None if writer is None else args.model,
+        census=_census(souls, args.include_people),
     )
     render_terminal(altar, console)
 
@@ -114,6 +117,17 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         console.print(Text(f"altar written to {args.html}"))
     return 0
+
+
+def _census(souls: list, include_people: bool) -> dict[str, int]:
+    census = {
+        "deleted files": sum(s.kind == "file" for s in souls),
+        "reverts": sum(s.kind == "revert" for s in souls),
+        "ghosts": sum(is_ghost(s) for s in souls),
+    }
+    if include_people:
+        census["went quiet"] = sum(s.kind == "contributor" for s in souls)
+    return census
 
 
 def _repo_name(repo: Path) -> str:
