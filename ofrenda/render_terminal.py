@@ -9,6 +9,7 @@ from rich.table import Table
 from rich.text import Text
 
 from .altar import Altar, clean_text, fact_rows, footer, ghost_line, source_label, subtitle
+from .rank import is_ghost
 from .souls import Soul
 
 MARIGOLD = "#F2A007"
@@ -61,5 +62,5 @@ def _card(altar: Altar, soul: Soul) -> Panel:
     if len(name) > TITLE_WIDTH:  # keep the filename, drop the front of the path
         name = "…" + name[-(TITLE_WIDTH - 1):]
     title = Text(f"{_KIND_ICON.get(soul.kind, '')} ") + Text(name, style="bold")
-    border = VIOLET if soul.returned else MARIGOLD
+    border = VIOLET if is_ghost(soul) else MARIGOLD
     return Panel(body, title=title, title_align="left", border_style=border, width=48)

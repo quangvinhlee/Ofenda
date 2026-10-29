@@ -3,6 +3,7 @@
 import html
 
 from .altar import Altar, clean_text, fact_rows, footer, ghost_line, source_label, subtitle
+from .rank import is_ghost
 from .souls import Soul
 
 _PICADO_COLORS = ("#F2A007", "#D6336C", "#7048E8", "#2FB380", "#F76707", "#E64980")
@@ -112,7 +113,7 @@ def _card(altar: Altar, soul: Soul) -> str:
     facts = "".join(f"<dt>{e(label)}</dt><dd>{e(value)}</dd>" for label, value in fact_rows(soul))
     verse, _ = altar.verses.get(soul.id, ("", "template"))
     verse = "\n".join(clean_text(line, 120) for line in verse.splitlines())
-    cls = "card ghost" if soul.returned else "card"
+    cls = "card ghost" if is_ghost(soul) else "card"
     return (
         f'<article class="{cls}">'
         f'<div class="kind">{e(_KIND_NAME.get(soul.kind, soul.kind))}</div>'

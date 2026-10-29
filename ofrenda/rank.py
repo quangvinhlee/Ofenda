@@ -28,12 +28,16 @@ def select(souls: list[Soul], top: int = 8) -> list[Soul]:
     return files[:top] + reverts[:REVERT_QUOTA] + people[:CONTRIBUTOR_QUOTA]
 
 
+def is_ghost(soul: Soul) -> bool:
+    return soul.returned is not None and soul.days_gone >= MIN_DAYS_GONE
+
+
 def ghosts(souls: list[Soul], limit: int = 5) -> list[Soul]:
     """Souls that came back, exact returns first, longest in the grave first.
 
     A return less than a day after death is a move split over two commits, not a haunting.
     """
-    back = [s for s in souls if s.returned is not None and s.days_gone >= MIN_DAYS_GONE]
+    back = [s for s in souls if is_ghost(s)]
     back.sort(key=lambda s: (not s.returned.exact, -s.days_gone, _newest(s)))
     return back[:limit]
 

@@ -101,3 +101,13 @@ def test_html_has_label():
 
 def test_html_empty_altar():
     assert "Nobody has died here. Yet." in render_html(make_altar(souls=[]))
+
+
+def test_same_day_move_is_not_styled_as_ghost():
+    soon = Return(Commit("c" * 40, "Cy", "c@x", datetime(2021, 1, 1, 6, tzinfo=UTC), "moved"),
+                  "new/old.py", exact=True)
+    out = render_html(make_altar(souls=[make_soul(returned=soon)]))
+    assert "card ghost" not in out
+    later = Return(Commit("c" * 40, "Cy", "c@x", datetime(2022, 1, 1, tzinfo=UTC), "back"),
+                   "old.py", exact=True)
+    assert "card ghost" in render_html(make_altar(souls=[make_soul(returned=later)]))
