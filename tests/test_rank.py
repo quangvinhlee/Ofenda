@@ -47,7 +47,7 @@ def test_select_quotas():
 
 
 def test_ghosts_exact_first():
-    c = Commit("c" * 40, "Cy", "c@x", T0, "back")
+    c = Commit("c" * 40, "Cy", "c@x", T0 + timedelta(days=5000), "back")
     exact = make_soul(lifespan=1, touches=1, name="low.py", returned=Return(c, "a", exact=True))
     named = make_soul(lifespan=3000, touches=50, name="high.py", returned=Return(c, "b", exact=False))
     plain = make_soul(name="dead.py")
@@ -68,3 +68,12 @@ def test_enrich_lines_missing_blob_is_none(repo):
     s = make_soul(blob="d" * 40)
     enrich_lines(repo.path, [s])
     assert s.lines_at_death is None
+
+
+def test_ghosts_skip_same_day_moves_and_rank_by_time_gone():
+    def back(days_after_death, lifespan=300):
+        return Commit("c" * 40, "Cy", "c@x", T0 + timedelta(days=lifespan + days_after_death), "back")
+    move = make_soul(name="moved.py", returned=Return(back(0), "new/moved.py", exact=True))
+    short = make_soul(name="short.py", returned=Return(back(3), "short.py", exact=True))
+    long = make_soul(name="long.py", returned=Return(back(900), "long.py", exact=True))
+    assert [s.name for s in ghosts([move, short, long])] == ["long.py", "short.py"]

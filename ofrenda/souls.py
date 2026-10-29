@@ -55,6 +55,13 @@ class Soul:
     def lifespan_days(self) -> int:
         return max(0, (self.died.date - self.born.date).days)
 
+    @property
+    def days_gone(self) -> int | None:
+        """Days between death and first return, or None if it never came back."""
+        if self.returned is None:
+            return None
+        return max(0, (self.returned.commit.date - self.died.date).days)
+
 
 @dataclass
 class _Track:

@@ -43,7 +43,7 @@ def test_terminal_shows_facts_and_label():
     assert "old.py" in out and "remove legacy" in out
     assert "calavera · written locally by gemma4:e2b" in out
     assert "👻 They came back" in out
-    assert "new/old.py" in out and "exact same content" in out
+    assert "new/old.py" in out and "exact same content" in out and "after 397 days" in out
     assert "42 commits · 2019 – 2026" in out
     assert "verses by gemma4:e2b on this machine" in out
 

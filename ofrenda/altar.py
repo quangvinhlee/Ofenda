@@ -49,7 +49,8 @@ def subtitle(altar: Altar) -> str:
 def ghost_line(soul: Soul) -> str:
     r = soul.returned
     how = "exact same content" if r.exact else "same name, new body"
-    return f"{clean_text(soul.name)} → {clean_text(r.path)} ({how}) · {r.commit.date:%Y-%m-%d}"
+    return (f"{clean_text(soul.name)} → {clean_text(r.path)} ({how}) · "
+            f"{r.commit.date:%Y-%m-%d}, after {soul.days_gone} days")
 
 
 def fact_rows(soul: Soul) -> list[tuple[str, str]]:
