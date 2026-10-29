@@ -114,7 +114,7 @@ HTML escapes everything. A file named `<script>alert(1)</script>.js` is just a s
 **Stack:** Python, the `git` CLI, [`rich`](https://github.com/Textualize/rich) for the
 terminal altar, and plain `urllib` to talk to Ollama (no SDK). The HTML altar is a single
 self-contained page: papel picado made from CSS `clip-path`, candle flames that flicker
-(but not under `prefers-reduced-motion`), and no external requests at all. 53 tests,
+(but not under `prefers-reduced-motion`), and no external requests at all. 58 tests,
 written test-first.
 
 ## Why Does Open Innovation Matter?
