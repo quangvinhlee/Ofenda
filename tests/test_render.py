@@ -4,6 +4,7 @@ from rich.console import Console
 
 from ofrenda.altar import Altar
 from ofrenda.history import Commit
+from ofrenda.render_html import render_html
 from ofrenda.render_terminal import render_terminal
 from ofrenda.souls import Return, Soul
 
@@ -72,3 +73,31 @@ def test_terminal_long_name_keeps_filename():
 
 def test_terminal_empty_altar():
     assert "Nobody has died here. Yet." in terminal_text(make_altar(souls=[]))
+
+
+def test_html_escapes_everything():
+    back = Return(Commit("c" * 40, "Cy", "c@x", datetime(2022, 2, 2, tzinfo=UTC), "x"),
+                  '"><script>x</script>', exact=False)
+    soul = make_soul(name="<script>alert(1)</script>.js", last_words="a & b", returned=back)
+    altar = make_altar(souls=[soul], ghosts=[soul])
+    altar.repo_name = "<b>repo</b>"
+    altar.verses[soul.id] = ("<img src=x onerror=alert(1)>\nsecond", "model")
+    out = render_html(altar)
+    assert "<script>alert" not in out and "<img" not in out and "<b>repo" not in out
+    assert "&lt;script&gt;" in out and "a &amp; b" in out
+
+
+def test_html_is_offline():
+    out = render_html(make_altar())
+    for needle in ("http://", "https://", "//cdn"):
+        assert needle not in out
+
+
+def test_html_has_label():
+    out = render_html(make_altar())
+    assert "calavera · written locally by gemma4:e2b" in out
+    assert out.startswith("<!doctype html>") and "<title>Ofrenda · demo</title>" in out
+
+
+def test_html_empty_altar():
+    assert "Nobody has died here. Yet." in render_html(make_altar(souls=[]))
