@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ofrenda · express</title>
+<style>
+:root { --bg:#1a1024; --panel:#251733; --ink:#f6ecdf; --dim:#b9a6c9; --marigold:#F2A007;
+        --magenta:#D6336C; --violet:#7048E8; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); }
+body { font:16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+       min-height:100vh; overflow-x:hidden; }
+.picado { display:flex; height:64px; }
+.picado span { flex:1; clip-path:polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+               opacity:.9; margin:0 2px; }
+header { text-align:center; padding:24px 16px 8px; }
+h1 { margin:8px 0 4px; font-size:clamp(1.6rem, 5vw, 2.6rem); letter-spacing:.06em;
+     color:var(--marigold); overflow-wrap:anywhere; }
+.sub { color:var(--dim); margin:0; }
+.marigolds { font-size:1.2rem; letter-spacing:.3em; margin:12px 0 0; overflow:hidden; white-space:nowrap; }
+.candles { display:flex; justify-content:center; gap:40px; margin:20px 0 4px; }
+.candle { position:relative; width:18px; height:46px; margin-top:22px; border-radius:3px;
+          background:linear-gradient(#fff5e0, #e9d6b8); }
+.flame { position:absolute; left:50%; top:-22px; width:14px; height:22px; margin-left:-7px;
+         border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+         background:radial-gradient(circle at 50% 70%, #fff7c2 0 25%, #F2A007 55%, #D6336C 100%);
+         box-shadow:0 0 18px 6px rgba(242,160,7,.45); transform-origin:50% 100%;
+         animation:flicker 1.6s ease-in-out infinite alternate; }
+.candle:nth-child(2) .flame { animation-delay:.4s; }
+.candle:nth-child(3) .flame { animation-delay:.9s; }
+@keyframes flicker { 0% { transform:scale(1) rotate(-2deg); opacity:.95; }
+                     50% { transform:scale(1.08, .94) rotate(2deg); opacity:1; }
+                     100% { transform:scale(.94, 1.06) rotate(-1deg); opacity:.85; } }
+@media (prefers-reduced-motion: reduce) { .flame { animation:none; } }
+main { max-width:1180px; margin:0 auto; padding:8px 16px 32px; }
+h2 { color:var(--violet); font-size:1.15rem; margin:28px 0 10px; }
+.ghosts { list-style:none; margin:0; padding:14px 16px; border:1px dashed var(--violet);
+          border-radius:12px; background:rgba(112,72,232,.12); }
+.ghosts li { overflow-wrap:anywhere; padding:3px 0; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:18px; }
+.card { background:var(--panel); border:1px solid rgba(242,160,7,.55); border-top:4px solid var(--marigold);
+        border-radius:12px; padding:16px; display:flex; flex-direction:column; min-width:0; }
+.card.ghost { background:rgba(112,72,232,.16); border-color:rgba(160,140,255,.55);
+              border-top-color:var(--violet); box-shadow:0 0 24px rgba(112,72,232,.35);
+              backdrop-filter:blur(2px); }
+.kind { font-size:.75rem; text-transform:uppercase; letter-spacing:.12em; color:var(--magenta); }
+.card h3 { margin:2px 0 10px; font-size:1.05rem; font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+           overflow-wrap:anywhere; }
+dl { display:grid; grid-template-columns:auto 1fr; gap:2px 12px; margin:0; font-size:.9rem; }
+dt { color:var(--dim); white-space:nowrap; }
+dd { margin:0; overflow-wrap:anywhere; }
+.verse { margin:14px 0 6px; padding-top:12px; border-top:1px solid var(--magenta);
+         font-style:italic; white-space:pre-line; overflow-wrap:anywhere; }
+.label { color:var(--dim); font-size:.78rem; margin-top:auto; }
+.empty { text-align:center; color:var(--marigold); font-style:italic; font-size:1.3rem; margin:40px 0; }
+footer { text-align:center; color:var(--dim); font-size:.85rem; padding:0 16px 32px; }
+</style>
+</head>
+<body>
+<div class="picado" aria-hidden="true"><span style="background:#F2A007"></span><span style="background:#D6336C"></span><span style="background:#7048E8"></span><span style="background:#2FB380"></span><span style="background:#F76707"></span><span style="background:#E64980"></span><span style="background:#F2A007"></span><span style="background:#D6336C"></span><span style="background:#7048E8"></span><span style="background:#2FB380"></span><span style="background:#F76707"></span><span style="background:#E64980"></span><span style="background:#F2A007"></span><span style="background:#D6336C"></span></div>
+<header>
+<div class="candles" aria-hidden="true"><div class="candle"><div class="flame"></div></div><div class="candle"><div class="flame"></div></div><div class="candle"><div class="flame"></div></div></div>
+<h1>OFRENDA · express</h1>
+<p class="sub">6183 commits · 2009 – 2026</p>
+<p class="marigolds" aria-hidden="true">🌼🌼🌼🌼🌼🌼🌼🌼🌼🌼🌼🌼</p>
+</header>
+<main>
+<h2>👻 They came back</h2>
+<ul class="ghosts"><li>test/app.options.js → test/app.options.js (exact same content) · 2013-07-16, after 321 days</li><li>test/fixtures/layouts/foo.jade → examples/static-files/public/js/app.js (exact same content) · 2012-09-03, after 299 days</li><li>examples/cache/views/user.ejs → examples/extending-templates/views/users/user.html (exact same content) · 2011-07-04, after 124 days</li><li>support/bench → support/bench (exact same content) · 2012-04-25, after 14 days</li><li>lib/support/js-oo → support/oo (exact same content) · 2010-03-16, after 4 days</li></ul>
+<h2>🕯️ Remembered here</h2>
+<div class="grid"><article class="card"><div class="kind">deleted file</div><h3>lib/express/core.js</h3><dl><dt>born</dt><dd>2009-12-02 · visionmedia</dd><dt>died</dt><dd>2010-06-18 · Tj Holowaychuk</dd><dt>lifespan</dt><dd>198 days</dd><dt>touches</dt><dd>220</dd><dt>lines at death</dt><dd>289</dd><dt>last words</dt><dd>&quot;Removed old cruft&quot;</dd></dl><p class="verse">File sighs, its days now done,
+Removed old cruft beneath the sun.
+Visionmedia&#x27;s light has ceased to gleam,
+A quiet ending in a waking dream.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>bin/express</h3><dl><dt>born</dt><dd>2010-07-06 · Tj Holowaychuk</dd><dt>died</dt><dd>2014-01-03 · Jonathan Ong</dd><dt>lifespan</dt><dd>1276 days</dd><dt>touches</dt><dd>148</dd><dt>lines at death</dt><dd>423</dd><dt>last words</dt><dd>&quot;remove binary&quot;</dd></dl><p class="verse">Bin/express, now gone from sight,
+Its binary whispers take their flight.
+A quiet pause where it did reside,
+Its journey&#x27;s end cannot be denied.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>docs/guide.md</h3><dl><dt>born</dt><dd>2010-07-12 · Tj Holowaychuk</dd><dt>died</dt><dd>2012-04-15 · TJ Holowaychuk</dd><dt>lifespan</dt><dd>643 days</dd><dt>touches</dt><dd>169</dd><dt>lines at death</dt><dd>1366</dd><dt>last words</dt><dd>&quot;removed old docs&quot;</dd></dl><p class="verse">Guide&#x27;s soft page is now quite gone,
+Like old documents that are drawn.
+Their quiet words will not return,
+A memory where lessons burn.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>lib/router/index.js</h3><dl><dt>born</dt><dd>2011-04-25 · Tj Holowaychuk</dd><dt>died</dt><dd>2015-07-06 · Douglas Christopher Wilson</dd><dt>lifespan</dt><dd>1533 days</dd><dt>touches</dt><dd>133</dd><dt>lines at death</dt><dd>626</dd><dt>once known as</dt><dd>lib/router.js</dd><dt>last words</dt><dd>&quot;Use router module for routing&quot;</dd></dl><p class="verse">File, in slumber deep and still,
+Its coding journey to its end,
+A quiet pause upon the hill,
+Where former paths now softly bend.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>lib/express/core.js</h3><dl><dt>born</dt><dd>2009-06-26 · visionmedia</dd><dt>died</dt><dd>2009-12-02 · visionmedia</dd><dt>lifespan</dt><dd>159 days</dd><dt>touches</dt><dd>160</dd><dt>lines at death</dt><dd>679</dd><dt>once known as</dt><dd>lib/express.core.js</dd><dt>last words</dt><dd>&quot;Starting fresh&quot;</dd></dl><p class="verse">For core.js, a light has flown,
+Its journey on the screen is known.
+Though quiet now, they gave their part,
+A fresh new form, a hopeful start.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>.travis.yml</h3><dl><dt>born</dt><dd>2011-11-24 · Tj Holowaychuk</dd><dt>died</dt><dd>2021-07-01 · Douglas Christopher Wilson</dd><dt>lifespan</dt><dd>3506 days</dd><dt>touches</dt><dd>85</dd><dt>lines at death</dt><dd>77</dd><dt>last words</dt><dd>&quot;build: use GitHub Actions instead of Travis CI&quot;</dd></dl><p class="verse">Travis YAML, now quiet and still,
+Their brief days passed upon the hill.
+The build command they used to claim,
+A fading echo of a name.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>test/view.test.js</h3><dl><dt>born</dt><dd>2010-07-05 · Tj Holowaychuk</dd><dt>died</dt><dd>2011-11-08 · Tj Holowaychuk</dd><dt>lifespan</dt><dd>490 days</dd><dt>touches</dt><dd>138</dd><dt>lines at death</dt><dd>1056</dd><dt>last words</dt><dd>&quot;Remove old tests&quot;</dd></dl><p class="verse">File, now silent and gone,
+Its former tests are long since drawn.
+Though Tj Holowaychuk&#x27;s work remains,
+A quiet end in memory sustains.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">deleted file</div><h3>lib/express/view.js</h3><dl><dt>born</dt><dd>2010-06-19 · Tj Holowaychuk</dd><dt>died</dt><dd>2011-02-03 · Tj Holowaychuk</dd><dt>lifespan</dt><dd>228 days</dd><dt>touches</dt><dd>110</dd><dt>lines at death</dt><dd>278</dd><dt>last words</dt><dd>&quot;Updated connect submodule&quot;</dd></dl><p class="verse">For `view.js`, a soft sigh we hear,
+Though quiet now, their work is clear.
+A former state, a memory bright,
+Now rests in shadow of the light.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">reverted commit</div><h3>Improve error message for null/undefined to res.status</h3><dl><dt>born</dt><dd>2015-11-12 · Joshua Caron</dd><dt>died</dt><dd>2019-05-25 · Douglas Christopher Wilson</dd><dt>lifespan</dt><dd>1290 days</dd><dt>touches</dt><dd>1</dd><dt>last words</dt><dd>&quot;Revert &quot;Improve error message for null/undefined to res.status&quot;&quot;</dd></dl><p class="verse">Improve error message for null/undefined to res.status,
+Revert&#x27;s soft whisper, a silent review.
+Though Joshua Caron, they went quiet and cease,
+A lost message now brings a gentle peace.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">reverted commit</div><h3>remove old OPTIONS default response</h3><dl><dt>born</dt><dd>2012-08-28 · TJ Holowaychuk</dd><dt>died</dt><dd>2013-07-16 · TJ Holowaychuk</dd><dt>lifespan</dt><dd>321 days</dd><dt>touches</dt><dd>1</dd><dt>last words</dt><dd>&quot;Revert &quot;remove old OPTIONS default response&quot;&quot;</dd></dl><p class="verse">Remove old OPTIONS default response, so still we sigh,
+Revert, a quiet breath beneath the sky.
+The old default response has ceased to be,
+A memory now, for all to see.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">reverted commit</div><h3>remove charset from json responses. Closes #1631</h3><dl><dt>born</dt><dd>2013-06-05 · TJ Holowaychuk</dd><dt>died</dt><dd>2013-08-27 · TJ Holowaychuk</dd><dt>lifespan</dt><dd>83 days</dd><dt>touches</dt><dd>1</dd><dt>last words</dt><dd>&quot;Revert &quot;remove charset from json responses. Closes #1631&quot;&quot;</dd></dl><p class="verse">Revert, a spirit now withdrawn,
+Their quiet presence has been gone.
+No vibrant word can now be found,
+Where happy echoes once did sound.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">went quiet</div><h3>TJ Holowaychuk</h3><dl><dt>born</dt><dd>2009-06-26 · visionmedia</dd><dt>died</dt><dd>2014-02-19 · TJ Holowaychuk</dd><dt>lifespan</dt><dd>1699 days</dd><dt>commits</dt><dd>3881</dd><dt>last words</dt><dd>&quot;update node-fresh&quot;</dd></dl><p class="verse">For TJ Holowaychuk, a gentle sigh,
+Their quiet voice has drifted to the sky.
+Through visionmedia&#x27;s light, a memory stays,
+A fading echo of those passing days.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">went quiet</div><h3>Douglas Christopher Wilson</h3><dl><dt>born</dt><dd>2014-04-10 · Douglas Christopher Wilson</dd><dt>died</dt><dd>2023-11-01 · Douglas Christopher Wilson</dd><dt>lifespan</dt><dd>3492 days</dd><dt>commits</dt><dd>1232</dd><dt>last words</dt><dd>&quot;build: actions/checkout@v4&quot;</dd></dl><p class="verse">Douglas Christopher Wilson&#x27;s bright light is gone,
+Their quiet voice is where shadows are drawn.
+Though they are contributor, they went still,
+Upon the soft memory, they linger still.</p><p class="label">calavera · written locally by gemma4:e2b</p></article><article class="card"><div class="kind">went quiet</div><h3>Jonathan Ong</h3><dl><dt>born</dt><dd>2013-09-07 · Jonathan Ong</dd><dt>died</dt><dd>2014-06-05 · Jonathan Ong</dd><dt>lifespan</dt><dd>270 days</dd><dt>commits</dt><dd>84</dd><dt>last words</dt><dd>&quot;use vary@0.1.0&quot;</dd></dl><p class="verse">Jonathan Ong, your voice is now still,
+Your quiet presence, a gentle thrill.
+Though your days were brief, a memory stays,
+Through these sweet moments, in sunlit haze.</p><p class="label">calavera · written locally by gemma4:e2b</p></article></div>
+</main>
+<footer>facts from git · verses by gemma4:e2b on this machine</footer>
+</body>
+</html>
