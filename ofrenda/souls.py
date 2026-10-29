@@ -1,10 +1,13 @@
 """Turn history into souls: deleted files, reverted commits, quiet contributors."""
 
+import re
 from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from typing import Literal, Sequence
 
 from .history import Commit, Entry
+
+_REVERT = re.compile(r'^Revert "(.+)"$')
 
 EMPTY_BLOB = "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
 
@@ -115,4 +118,49 @@ def find_file_souls(history: list[Entry], ignores: Sequence[str] = DEFAULT_IGNOR
                 bury(soul)
             else:  # M, T, and anything unexpected
                 live.setdefault(ch.path, _Track(commit)).touch(commit)
+    return souls
+
+
+def find_revert_souls(history: list[Entry]) -> list[Soul]:
+    souls: list[Soul] = []
+    latest_by_subject: dict[str, Commit] = {}
+    for entry in history:
+        commit = entry.commit
+        m = _REVERT.match(commit.subject)
+        if m and (original := latest_by_subject.get(m.group(1))) is not None:
+            authors = list(dict.fromkeys([original.author, commit.author]))
+            souls.append(Soul(
+                id=f"revert:{commit.sha[:12]}", kind="revert", name=m.group(1),
+                born=original, died=commit, last_words=commit.subject,
+                touches=1, authors=authors,
+            ))
+        latest_by_subject[commit.subject] = commit
+    return souls
+
+
+def find_quiet_contributors(history: list[Entry], quiet_days: int = 365,
+                            min_commits: int = 5) -> list[Soul]:
+    if not history:
+        return []
+    now = history[-1].commit.date
+    first: dict[str, Commit] = {}
+    last: dict[str, Commit] = {}
+    count: dict[str, int] = {}
+    for entry in history:
+        c = entry.commit
+        key = c.email.lower()
+        first.setdefault(key, c)
+        if key not in last or c.date >= last[key].date:
+            last[key] = c
+        count[key] = count.get(key, 0) + 1
+    souls: list[Soul] = []
+    for key, n in count.items():
+        final = last[key]
+        if n < min_commits or (now - final.date).days < quiet_days:
+            continue
+        souls.append(Soul(
+            id=f"contributor:{key}", kind="contributor", name=final.author,
+            born=first[key], died=final, last_words=final.subject,
+            touches=n, authors=[final.author],
+        ))
     return souls

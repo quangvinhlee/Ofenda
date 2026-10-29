@@ -1,7 +1,9 @@
 from datetime import UTC, datetime
 
 from ofrenda.history import Change, Commit, Entry, read_history
-from ofrenda.souls import DEFAULT_IGNORES, find_file_souls, is_ignored
+from ofrenda.souls import (
+    DEFAULT_IGNORES, find_file_souls, find_quiet_contributors, find_revert_souls, is_ignored,
+)
 
 
 def test_deleted_file_becomes_soul(repo):
@@ -57,3 +59,29 @@ def test_delete_without_birth_synthesizes():
     h = [Entry(c, (Change("D", "b"*40, "0"*40, "x.py", None),))]
     (s,) = find_file_souls(h)
     assert s.born == s.died and s.lifespan_days == 0
+
+
+def test_revert_links_to_original(repo):
+    repo.write("f.py", "1\n"); repo.commit("Add turbo mode", date="2020-01-01T00:00:00+00:00")
+    repo.write("f.py", "2\n"); repo.commit('Revert "Add turbo mode"', date="2020-01-11T00:00:00+00:00")
+    (s,) = find_revert_souls(read_history(repo.path))
+    assert (s.kind, s.name, s.lifespan_days) == ("revert", "Add turbo mode", 10)
+
+
+def test_revert_without_original_is_skipped(repo):
+    repo.write("f.py", "1\n"); repo.commit('Revert "something from another branch"')
+    assert find_revert_souls(read_history(repo.path)) == []
+
+
+def test_quiet_contributor(repo):
+    for i in range(5):
+        repo.write("a.py", f"{i}\n"); repo.commit(f"ana {i}", author="Ana <ana@x>", date=f"2020-01-0{i+1}T00:00:00+00:00")
+    repo.write("a.py", "z\n"); repo.commit("still here", author="Bo <bo@x>", date="2022-01-01T00:00:00+00:00")
+    (s,) = find_quiet_contributors(read_history(repo.path))
+    assert (s.name, s.touches, s.last_words) == ("Ana", 5, "ana 4")
+
+
+def test_drive_by_contributor_ignored(repo):
+    repo.write("a.py", "1\n"); repo.commit("one", author="Cy <cy@x>", date="2019-01-01T00:00:00+00:00")
+    repo.write("a.py", "2\n"); repo.commit("late", date="2022-01-01T00:00:00+00:00")
+    assert find_quiet_contributors(read_history(repo.path)) == []
